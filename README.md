@@ -1,33 +1,53 @@
-# 💰 Web Cash Flow
+# 📦 Web Inventory
 
-Proyek **Web Cash Flow** ini dibuat menggunakan Laravel dan Filament sebagai sarana **pembelajaran dan pengembangan pribadi**.
+Proyek **Web Inventory** ini dibuat menggunakan **Laravel**, dengan integrasi **AdminLTE** dan **Bootstrap** sebagai antarmuka admin.
 
-Aplikasi ini membantu mencatat dan memantau arus kas masuk dan keluar dengan fitur yang sederhana namun fungsional.
+Aplikasi ini ditujukan untuk membantu proses manajemen inventaris secara efisien, mencakup pencatatan produk masuk dan keluar, serta pengelolaan data master dan user.
 
 ---
 
 ## 🚀 Fitur Aplikasi
 
-- **Dashboard**  
-  Menampilkan total pemasukan dan pengeluaran secara ringkas dan jelas.
+### 🔐 Autentikasi
+- **Login**: Sistem login untuk mengakses fitur-fitur aplikasi.
+- **Registrasi**: Form registrasi untuk membuat akun pengguna baru.
 
-- **Kategori**  
-  Menambah dan mengelola kategori transaksi (seperti Gaji, Belanja, Tabungan, dll).
+### 📊 Dashboard
+Menampilkan data ringkasan secara real-time:
+- Total Produk
+- Total Supplier
+- Produk Masuk
+- Produk Keluar
 
-- **Transaksi**  
-  Menambah, mengedit, dan menghapus data transaksi. Transaksi terhubung langsung dengan kategori yang dipilih.
+### 🗂️ Data Master
+Manajemen data utama inventaris:
+- **Kategori Produk**: Tambah, edit, dan hapus kategori produk.
+- **Supplier**: Kelola data pemasok.
+- **Produk**: Tambah dan kelola informasi produk.
 
-- **Laporan PDF**  
-  Cetak data transaksi ke dalam file PDF berdasarkan rentang tanggal tertentu.
+### 📥 Produk Masuk
+- Tambah data barang yang masuk
+- Edit data produk masuk
+- Hapus data produk masuk
+
+### 📤 Produk Keluar
+- Tambah data barang yang keluar dari gudang
+- Edit data produk keluar
+- Hapus data produk keluar
+
+### 👥 Kelola User
+- Lihat daftar user yang terdaftar
+- Edit data user
+- Hapus user jika diperlukan
 
 ---
 
 ## 🛠️ Teknologi yang Digunakan
 
-- Laravel
-- Filament Admin Panel
-- Tailwind CSS (bawaan Filament)
-- Vite (untuk pengelolaan aset CSS/JS)
-- mPDF atau DomPDF (untuk export PDF)
+- Laravel (Backend Framework)
+- AdminLTE (Template Admin UI)
+- Bootstrap (CSS Framework)
+- jQuery (JavaScript Interaktivitas)
+- FontAwesome (Ikon UI)
 
 ---
