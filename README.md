@@ -31,10 +31,3 @@ Aplikasi ini membantu mencatat dan memantau arus kas masuk dan keluar dengan fit
 - mPDF atau DomPDF (untuk export PDF)
 
 ---
-
-## ⚙️ Instalasi Lokal
-
-1. Clone repository
-   ```bash
-   git clone https://github.com/abdulrouff10/finance.git
-   cd finance
