@@ -48,6 +48,7 @@
                                 <th>Nama Produk</th>
                                 <th>Kategori</th>
                                 <th>Harga</th>
+                                <th>Stok</th>
                                 <th>Action</th>
                             </thead>
                             <tbody>
@@ -64,6 +65,7 @@
                                         <td>{{ $k->nama_produk }}</td>
                                         <td>{{ $k->kategori->nama_kategori }}</td>
                                         <td>Rp. {{ number_format($k->harga, 2, ',', '.') }}</td>
+                                        <td>{{ $k->stok }}</td>
                                         <td class="text-center">
                                             <div class="btn-group">
                                                 <a class="btn btn-sm btn-warning mr-2 "

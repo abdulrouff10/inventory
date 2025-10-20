@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Kategori;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class KategoriController extends Controller
 {
@@ -12,11 +13,10 @@ class KategoriController extends Controller
      */
     public function index()
     {
-        $data = [
+        return view('kategori.index', [
             'title' => 'Kategori Produk',
-            'kategori' => Kategori::all()
-        ];
-        return view('kategori.index', $data);
+            'kategori' => Kategori::where('user_id', Auth::id())->get()
+        ]);
     }
 
     /**
@@ -24,11 +24,9 @@ class KategoriController extends Controller
      */
     public function create()
     {
-        $data = [
-            'title' => 'Kategori Produk',
-
-        ];
-        return view('kategori.tambah', $data);
+        return view('kategori.tambah', [
+            'title' => 'Tambah Kategori Produk'
+        ]);
     }
 
     /**
@@ -36,19 +34,18 @@ class KategoriController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'nama_kategori' => 'required|string|max:100',
+            'deskripsi' => 'nullable|string',
+        ]);
+
         Kategori::create([
             'nama_kategori' => $request->nama_kategori,
             'deskripsi' => $request->deskripsi,
+            'user_id' => Auth::id()
         ]);
-        return redirect()->route('kategori.index')->with('success', 'Data berhasil disimpan!');
-    }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
+        return redirect()->route('kategori.index')->with('success', 'Data berhasil disimpan!');
     }
 
     /**
@@ -56,11 +53,14 @@ class KategoriController extends Controller
      */
     public function edit($id)
     {
-        $data = [
-            'title' => 'Kategori Produk',
-            'kategori' => Kategori::where('id', $id)->get()
-        ];
-        return view('kategori.edit', $data);
+        $kategori = Kategori::where('id', $id)
+            ->where('user_id', Auth::id())
+            ->firstOrFail();
+
+        return view('kategori.edit', [
+            'title' => 'Edit Kategori Produk',
+            'kategori' => $kategori
+        ]);
     }
 
     /**
@@ -68,11 +68,21 @@ class KategoriController extends Controller
      */
     public function update(Request $request, $id)
     {
-        Kategori::where('id', $id,)->update([
+        $request->validate([
+            'nama_kategori' => 'required|string|max:100',
+            'deskripsi' => 'nullable|string',
+        ]);
+
+        $kategori = Kategori::where('id', $id)
+            ->where('user_id', Auth::id())
+            ->firstOrFail();
+
+        $kategori->update([
             'nama_kategori' => $request->nama_kategori,
             'deskripsi' => $request->deskripsi,
         ]);
-        return redirect()->route('kategori.index')->with('success', 'Data berhasil disimpan!');
+
+        return redirect()->route('kategori.index')->with('success', 'Data berhasil diperbarui!');
     }
 
     /**
@@ -80,7 +90,12 @@ class KategoriController extends Controller
      */
     public function destroy($id)
     {
-        Kategori::destroy($id);
+        $kategori = Kategori::where('id', $id)
+            ->where('user_id', Auth::id())
+            ->firstOrFail();
+
+        $kategori->delete();
+
         return redirect()->route('kategori.index')->with('success', 'Data berhasil dihapus');
     }
 }

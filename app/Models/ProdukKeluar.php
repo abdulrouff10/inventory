@@ -11,7 +11,7 @@ class ProdukKeluar extends Model
 
     protected $table = 'produk_keluar';
     protected $fillable = [
-        'id_produk', 'jumlah', 'created_at', 'updated_at'
+        'user_id', 'id_produk', 'jumlah', 'tanggal', 'created_at', 'updated_at'
     ];
 
     protected $dates = ['created_at', 'updated_at'];
@@ -20,5 +20,10 @@ class ProdukKeluar extends Model
     public function produk()
     {
         return $this->belongsTo(Produk::class, 'id_produk');
+    }
+
+    public function user()
+    {
+    return $this->belongsTo(User::class);
     }
 }

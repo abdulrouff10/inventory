@@ -74,6 +74,13 @@
                             <input type="number" class="form-control" name="harga" required value="{{ old('harga') }}">
 
                         </div>
+
+                        <div class="mb-3">
+                            <label for="exampleFormControlTextarea1" class="form-label">Stok</label>
+                            <input type="number" class="form-control" name="stok" required value="{{ old('stok') }}">
+
+                        </div>
+
                         <div class="mb-3">
                             <label for="exampleFormControlTextarea1" class="form-label">Foto</label>
                             <input type="file" class="form-control" name="foto" value="{{ old('foto') }}">

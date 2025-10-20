@@ -12,7 +12,7 @@ class Supplier extends Model
 
     protected $table = 'supplier';
     protected $fillable = [
-        'nama_supplier', 'alamat', 'no_telp', 'created_at',
+        'user_id', 'nama_supplier', 'alamat', 'no_telp', 'created_at',
         'updated_at',
     ];
     protected $dates = [
@@ -23,5 +23,10 @@ class Supplier extends Model
     public function produk()
     {
         return $this->hasMany(Produk::class, 'id_produk', 'id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

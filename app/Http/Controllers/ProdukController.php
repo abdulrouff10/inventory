@@ -7,6 +7,8 @@ use App\Models\Produk;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
+
 
 class ProdukController extends Controller
 {
@@ -14,13 +16,14 @@ class ProdukController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {
-        $data = [
-            'title' => 'Produk',
-            'produk' => Produk::all()
-        ];
-        return view('produk.index', $data);
-    }
+{
+    $data = [
+        'title' => 'Produk',
+        'produk' => Produk::where('user_id', Auth::id())->get()
+    ];
+    return view('produk.index', $data);
+}
+
 
     /**
      * Show the form for creating a new resource.
@@ -44,7 +47,9 @@ class ProdukController extends Controller
         $request->validate([
             'kode_produk' => 'required|unique:produk',
             'foto' => 'required|mimes:png,jpg,jpeg,svg|max:2048',
+            'stok' => 'required|integer|min:0' // ✅ validasi stok
         ]);
+        
         $file = $request->file('foto');
         $path = $file->store('public/produk');
 
@@ -52,11 +57,15 @@ class ProdukController extends Controller
             'nama_produk' => $request->nama_produk,
             'kode_produk' => $request->kode_produk,
             'harga' => $request->harga,
+            'stok' => $request->stok, // ✅ tambahkan ini
             'id_kategori' => $request->id_kategori,
             'id_supplier' => $request->id_supplier,
             'foto' => $path,
         );
+
+        $data['user_id'] = Auth::id(); // tambahkan user_id ke array $data
         Produk::create($data);
+
 
         return redirect()->route('produk.index')->with('success', 'Data berhasil disimpan');
     }
@@ -98,6 +107,7 @@ class ProdukController extends Controller
                 'nama_produk' => $request->nama_produk,
                 'harga' => $request->harga,
                 'kode_produk' => $request->kode_produk,
+                'stok' => $request->stok, // ✅ tambahkan ini
                 'id_supplier' => $request->id_supplier,
                 'id_kategori' => $request->id_kategori,
             );
@@ -115,6 +125,7 @@ class ProdukController extends Controller
                 'nama_produk' => $request->nama_produk,
                 'harga' => $request->harga,
                 'kode_produk' => $request->kode_produk,
+                'stok' => $request->stok, // ✅ tambahkan ini
                 'id_supplier' => $request->id_supplier,
                 'id_kategori' => $request->id_kategori,
                 'foto' => $path

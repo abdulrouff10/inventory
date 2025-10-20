@@ -5,111 +5,88 @@ namespace App\Http\Controllers;
 use App\Models\Produk;
 use App\Models\ProdukKeluar;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProdukKeluarController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $data = [
             'title' => 'Produk Keluar',
-            'produk_keluar' => ProdukKeluar::all()
+            'produk_keluar' => ProdukKeluar::where('user_id', Auth::id())->get()
         ];
         return view('produk_keluar.index', $data);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         $data = [
             'title' => 'Produk Keluar',
-            'produk' => Produk::all()
+            'produk' => Produk::where('user_id', Auth::id())->get()
         ];
         return view('produk_keluar.tambah', $data);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        ProdukMasuk::create([
+        ProdukKeluar::create([
             'id_produk' => $request->id_produk,
             'jumlah' => $request->jumlah,
             'tanggal' => $request->tanggal,
+            'keterangan' => $request->keterangan,
+            'user_id' => Auth::id() // ✅ Tambah user_id
         ]);
-        
 
+        // Update stok
         $produk = Produk::where('id', $request->id_produk)->first();
         $total_stok = $produk->stok - $request->jumlah;
-
-        Produk::where('id', $request->id_produk)->update(['stok' => $total_stok]);
+        $produk->update(['stok' => $total_stok]);
 
         return redirect()->route('produk_keluar.index')->with('success', 'Data berhasil disimpan!');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit($id)
     {
         $data = [
             'title' => 'Produk Keluar',
-            'produk' => Produk::all(),
-            'produk_keluar' => ProdukKeluar::where('id', $id)->first()
+            'produk' => Produk::where('user_id', Auth::id())->get(),
+            'produk_keluar' => ProdukKeluar::where('id', $id)->where('user_id', Auth::id())->firstOrFail()
         ];
         return view('produk_keluar.edit', $data);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request,  $id)
+    public function update(Request $request, $id)
     {
-        // kurangi dulu stok pada produk dengan jumlah masuk yang diedit
-        $produk_keluar = ProdukKeluar::where('id', $id)->first();
-        $produk = Produk::where('id', $request->id_produk)->first();
+        $produk_keluar = ProdukKeluar::where('id', $id)->where('user_id', Auth::id())->firstOrFail();
+        $produk = Produk::where('id', $request->id_produk)->firstOrFail();
 
-        // kembalikan stok ke semula
+        // Kembalikan stok ke semula
         $tambah_stok = $produk->stok + $produk_keluar->jumlah;
+        $produk->update(['stok' => $tambah_stok]);
 
-        $result =  Produk::where('id', $request->id_produk)->update(['stok' => $tambah_stok]);
-        if ($result) {
-            //simpan perubahan pada produk masuk
-            ProdukKeluar::where('id', $id)->update([
-                'id_produk' => $request->id_produk,
-                'jumlah' => $request->jumlah,
-                'tanggal' => $request->tanggal
-            ]);
-            
+        // Simpan perubahan dan update stok
+        $produk_keluar->update([
+            'id_produk' => $request->id_produk,
+            'jumlah' => $request->jumlah,
+            'tanggal' => $request->tanggal,
+            'keterangan' => $request->keterangan,
+        ]);
 
-            // jumlahkan dengan jumlah stok baru
-            $total_stok = $tambah_stok - $request->jumlah;
+        $total_stok = $tambah_stok - $request->jumlah;
+        $produk->update(['stok' => $total_stok]);
 
-            Produk::where('id', $request->id_produk)->update(['stok' => $total_stok]);
-
-            return redirect()->route('produk_keluar.index')->with('success', 'Data berhasil disimpan!');
-        }
+        return redirect()->route('produk_keluar.index')->with('success', 'Data berhasil diperbarui!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
-        ProdukKeluar::destroy($id);
+        $produk_keluar = ProdukKeluar::where('id', $id)->where('user_id', Auth::id())->firstOrFail();
+
+        // Kembalikan stok sebelum menghapus
+        $produk = Produk::where('id', $produk_keluar->id_produk)->first();
+        $produk->update(['stok' => $produk->stok + $produk_keluar->jumlah]);
+
+        $produk_keluar->delete();
 
         return redirect()->route('produk_keluar.index')->with('success', 'Data berhasil dihapus!');
     }

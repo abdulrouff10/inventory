@@ -11,7 +11,7 @@ class Produk extends Model
 
     protected $table = 'produk';
     protected $fillable = [
-        'kode_produk', 'nama_produk', 'id_kategori', 'id_supplier', 'harga', 'foto', 'stok', 'created_at',
+        'user_id', 'kode_produk', 'nama_produk', 'id_kategori', 'id_supplier', 'harga', 'foto', 'stok', 'created_at',
         'updated_at',
     ];
     protected $dates = [
@@ -37,5 +37,10 @@ class Produk extends Model
     public function produkkeluar()
     {
         return $this->hasMany(ProdukKeluar::class, 'id_produk', 'id');
+    }
+
+    public function user()
+    {
+    return $this->belongsTo(User::class);
     }
 }

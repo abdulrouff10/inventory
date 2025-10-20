@@ -78,6 +78,13 @@
                                 <input type="number" class="form-control" name="harga" value="{{ $p->harga }}"
                                     required>
                             </div>
+
+                            <div class="mb-3">
+                                <label for="exampleFormControlTextarea1" class="form-label">Stok</label>
+                                <input type="number" class="form-control" name="stok" value="{{ $p->stok }}"
+                                    required>
+                            </div>
+
                             <div class="mb-3">
                                 <label for="exampleFormControlTextarea1" class="form-label">Foto</label> <span
                                     class="text-danger"> *kosongi jika
